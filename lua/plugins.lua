@@ -357,6 +357,75 @@ end,
 			-- options
 		},
 	},
+	-- 面包屑
+	{
+		'Bekaboo/dropbar.nvim',
+		-- optional, but required for fuzzy finder support
+		dependencies = {
+			'nvim-telescope/telescope-fzf-native.nvim',
+			build = 'make'
+		},
+		config = function()
+		local dropbar_api = require('dropbar.api')
+		vim.keymap.set('n', '<Leader>;', dropbar_api.pick, { desc = 'Pick symbols in winbar' })
+		vim.keymap.set('n', '[;', dropbar_api.goto_context_start, { desc = 'Go to start of current context' })
+		vim.keymap.set('n', '];', dropbar_api.select_next_context, { desc = 'Select next context' })
+		end
+	},
+	{
+		'2kabhishek/nerdy.nvim',
+		dependencies = {
+			'folke/snacks.nvim',
+		},
+		cmd = 'Nerdy',
+		opts = {
+			max_recents = 30, -- Configure recent icons limit
+			add_default_keybindings = true, -- Add default keybindings
+			use_new_command = true, -- Enable new command system
+		}
+	},
+	{
+		"sontungexpt/bim.nvim",
+		event = "InsertEnter",
+		config = function()
+		require("bim").setup()
+		end
+	},
+	{
+		'numToStr/Comment.nvim',
+		opts = {
+			-- add any options here
+		}
+	},
+	{
+		'mcauley-penney/visual-whitespace.nvim',
+		config = true,
+		event = "ModeChanged *:[vV\22]", -- optionally, lazy load on entering visual mode
+		opts = {},
+	},
+	{
+		'vidocqh/auto-indent.nvim',
+		opts = {},
+	},
+	{
+		"soulis-1256/eagle.nvim",
+		opts = {
+			--override the default values found in config.lua
+		}
+	},
+	{
+		'dnlhc/glance.nvim',
+		cmd = 'Glance'
+	},
+	{
+		'rachartier/tiny-inline-diagnostic.nvim',
+		event = 'LspAttach', -- 仅在LSP启动时加载
+		config = function()
+		require('tiny-inline-diagnostic').setup({
+			show_diagnostic_text = true,
+		})
+		end
+	},
 })
 
 vim.notify("🚀 插件配置加载完成！", vim.log.levels.INFO, { title = "Neovim" })
