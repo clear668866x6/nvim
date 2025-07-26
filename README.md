@@ -28,8 +28,7 @@ mv ~/.local/share/nvim ~/.local/share/nvim.bak
 ```
 3. 克隆本仓库:
 ```
-git clone <您的仓库地址> ~/.config/nvim
-Use code with caution.
+git clone https://github.com/clear668866x6/nvim ~/.config/nvim
 ```
 4. 启动 Neovim:
 打开 Neovim，插件管理器将自动开始安装所有插件。
