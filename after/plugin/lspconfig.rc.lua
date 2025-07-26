@@ -99,7 +99,6 @@ for _, sign in ipairs(diagnostic_signs) do
       ]])
       end
 
-      --- 【新增】当LSP服务器支持时, 自动触发函数签名帮助
       if client.server_capabilities.signatureHelpProvider then
         local signature_group = vim.api.nvim_create_augroup('LspSignature', { clear = true })
         vim.api.nvim_create_autocmd('TextChangedI', {

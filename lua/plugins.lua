@@ -18,18 +18,16 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
 	-- 颜色主题
-	{ "catppuccin/nvim",
-	name = "catppuccin",
-	priority = 1000,
+	{
+		"EdenEast/nightfox.nvim",
 	config=function()
-		vim.cmd.colorscheme "catppuccin-latte"
+		vim.cmd.colorscheme "dayfox"
 	end,
 },
 
 -- 让Neovim背景变透明，如果你需要透明的UI或者模糊背景的效果，就需要用上这个插件
 { "xiyaowong/nvim-transparent" },
 
--- 一个超快(Blazingly Fast!)的状态栏美化插件
 {
 	"nvim-lualine/lualine.nvim",
 	dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -51,7 +49,9 @@ require("lazy").setup({
 {
 	"willothy/nvim-cokeline",
 	dependencies = {
-		"nvim-tree/nvim-web-devicons",
+		"nvim-lua/plenary.nvim",        -- Required for v0.4.0+
+		"nvim-tree/nvim-web-devicons", -- If you want devicons
+		"stevearc/resession.nvim"       -- Optional, for persistent history
 	},
 },
 
@@ -96,6 +96,7 @@ end,
 	    dependencies = { "nvim-treesitter/nvim-treesitter" },
     },
 
+	{ "echasnovski/mini.icons", lazy = true, version = false },
     -- LSP 设置
     -- lsp-zero 是一个已经配置好的基础 lsp 功能的合集插件
     {
@@ -180,9 +181,6 @@ end,
 	    "folke/trouble.nvim",
 	    dependencies = { "nvim-tree/nvim-web-devicons" },
 	    opts = {
-		    -- your configuration comes here
-		    -- or leave it empty to use the default settings
-		    -- refer to the configuration section below
 	    },
     },
 
@@ -191,8 +189,6 @@ end,
 	    "folke/todo-comments.nvim",
 	    dependencies = { "nvim-lua/plenary.nvim" },
 	    opts = {
-		    -- your configuration comes here
-		    -- or leave it empty to use the default settings
 	    },
     },
     { "nvim-telescope/telescope.nvim" },
@@ -215,7 +211,7 @@ end,
 		    vim.keymap.set('n', '<leader>t', ':ToggleTerm<CR>', {
 			    noremap = true,
 			    silent = true,
-			    desc = "Toggle Terminal"
+			    desc = "打开/关闭终端"
 		    })
 	    end,
     },
@@ -316,22 +312,51 @@ end,
 			    -- 您可以在这里添加 rayso 的其他配置
 		    }
 
-		    -- [核心修改] 添加快捷键
-		    -- 正常模式下的快捷键: <leader>pp
-		    vim.keymap.set('n', '<leader>pp', '<cmd>Rayso<cr>', {
-			    noremap = true,
-			    silent = true,
-			    desc = "Generate Rayso image for file"
-		    })
-
 		    -- 可视模式下的快捷键: <leader>pp
 		    vim.keymap.set('v', '<leader>pp', '<cmd>Rayso<cr>', {
 			    noremap = true,
 			    silent = true,
-			    desc = "Generate Rayso image for selection"
+			    desc = "代码截图"
 		    })
 	    end
     },
+	-- 按键映射表
+	{
+		"folke/which-key.nvim",
+		event = "VeryLazy",
+		opts = {
+			-- your configuration comes here
+			-- or leave it empty to use the default settings
+			-- refer to the configuration section below
+		},
+		keys = {
+			{
+				"<leader>?",
+				function()
+				require("which-key").show({ global = false })
+				end,
+				desc = "Buffer Local Keymaps (which-key)",
+			},
+		},
+	},
+	-- 报错提示
+	{
+		"rachartier/tiny-inline-diagnostic.nvim",
+		event = "VeryLazy", -- Or `LspAttach`
+		priority = 1000, -- needs to be loaded in first
+		config = function()
+		require('tiny-inline-diagnostic').setup()
+		vim.diagnostic.config({ virtual_text = false }) -- Only if needed in your configuration, if you already have native LSP diagnostics
+		end
+	},
+	{ 'kosayoda/nvim-lightbulb' },
+
+	{
+		"j-hui/fidget.nvim",
+		opts = {
+			-- options
+		},
+	},
 })
 
 vim.notify("🚀 插件配置加载完成！", vim.log.levels.INFO, { title = "Neovim" })

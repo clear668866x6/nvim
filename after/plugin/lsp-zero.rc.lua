@@ -5,9 +5,6 @@ lsp.on_attach(function(client, bufnr)
   lsp.default_keymaps({ buffer = bufnr })
 end)
 
--- 需要什么语言就在这里输入相应的 LSP 名字
--- 详细的 LSP 列表在： https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
--- 然后在命令行 :Mason 调出 Mason 界面安装这些 LSP
 lsp.setup_servers({
   'bashls',
   'html',

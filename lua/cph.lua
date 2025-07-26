@@ -788,15 +788,14 @@ api.nvim_create_user_command('CphNext', M.next_test, { desc = 'Go to next test' 
 api.nvim_create_user_command('CphPrev', M.prev_test, { desc = 'Go to previous test' })
 api.nvim_create_user_command('CphSave', M.save_and_stay, { desc = 'Save test cases' })
 local opts = { noremap = true, silent = true }
-vim.keymap.set('n', '<leader>o', M.toggle, opts)
-vim.keymap.set('n', '<leader>r', M.run_current_test, opts)
-vim.keymap.set('n', '<leader>ra', M.run_all_tests, opts)
-vim.keymap.set('n', '<leader>a', M.add_test, opts)
-vim.keymap.set('n', '<leader>d', M.delete_test, opts)
-vim.keymap.set('n', '<leader>x', M.kill_process, opts)  -- 改用 x 表示 kill/stop
-vim.keymap.set('n', '<leader>j', M.prev_test, opts)  -- j for previous (up)
-vim.keymap.set('n', '<leader>k', M.next_test, opts)  -- k for next (down)
-notify("FastOlympicCoding for Neovim initialized")
+vim.keymap.set('n', '<leader>o', M.toggle, vim.tbl_extend('force', opts, { desc = '打开cph' }))
+vim.keymap.set('n', '<leader>r', M.run_current_test, opts, vim.tbl_extend('force', opts,{ desc = '运行当前测试点' }))
+vim.keymap.set('n', '<leader>ra', M.run_all_tests, opts, vim.tbl_extend('force', opts,{ desc = '运行所有测试点' }))
+vim.keymap.set('n', '<leader>a', M.add_test, vim.tbl_extend('force', opts, { desc = '添加测试点' }))
+vim.keymap.set('n', '<leader>d', M.delete_test, vim.tbl_extend('force', opts, { desc = '删除当前测试点' }))
+vim.keymap.set('n', '<leader>x', M.kill_process, vim.tbl_extend('force', opts, { desc = '终止当前测试点' }))
+vim.keymap.set('n', '<leader>j', M.prev_test, vim.tbl_extend('force', opts, { desc = '向上切换测试点' }))
+vim.keymap.set('n', '<leader>k', M.next_test, vim.tbl_extend('force', opts, { desc = '向下切换测试点' }))
 end
 M.save_cases_to_file = save_tests
 return M
