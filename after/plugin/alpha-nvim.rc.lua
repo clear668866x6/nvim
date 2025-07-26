@@ -10,12 +10,12 @@ dashboard.section.header.val = {
     " ██████╝    ███████╗    ███████╝   ██║  ██║   ██║  ██║",
 }
 dashboard.section.buttons.val = {
-    dashboard.button("f", " " .. " Find file",       "<cmd> lua LazyVim.pick()() <cr>"),
-    dashboard.button("n", " " .. " New file",        [[<cmd> ene <BAR> startinsert <cr>]]),
-    dashboard.button("r", " " .. " Recent files",    [[<cmd> lua LazyVim.pick("oldfiles")() <cr>]]),
-    dashboard.button("g", " " .. " Find text",       [[<cmd> lua LazyVim.pick("live_grep")() <cr>]]),
-    dashboard.button("l", "󰒲 " .. " Lazy",            "<cmd> Lazy <cr>"),
-    dashboard.button("q", " " .. " Quit",            "<cmd> qa <cr>"),
+    dashboard.button("f", " " .. " Find file",       " :Telescope find_files <CR>"),
+    dashboard.button("n", " " .. " New file",        " :enew <CR>"),
+    dashboard.button("r", " " .. " Recent files",    " :Telescope oldfiles <CR>"),
+    dashboard.button("g", " " .. " Find text",       " :Telescope live_grep <CR>"),
+    dashboard.button("l", "󰒲 " .. " Lazy",            " :Lazy <CR>"),
+    dashboard.button("q", " " .. " Quit",            " :qa <CR>"),
 }
 
 local function footer()

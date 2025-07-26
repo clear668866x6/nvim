@@ -354,22 +354,29 @@ api.nvim_buf_set_lines(buf, 0, -1, false, lines)
 api.nvim_buf_set_option(buf, 'modifiable', false)
 end
 
-local function load_current_test()
-local test = M.state.tests[M.state.current_test_idx]
-if not test then return end
-init_vim_vars()
-local function set_buf_lines(buf_handle, content)
-	if buf_handle and api.nvim_buf_is_valid(buf_handle) then
-		api.nvim_buf_set_option(buf_handle, 'modifiable', true)
-		api.nvim_buf_set_lines(buf_handle, 0, -1, false, vim.split(content or "", '\n', { plain = true }))
-	end
-end
-set_buf_lines(M.state.handles.input_buf, test.input)
-set_buf_lines(M.state.handles.expected_buf, test.expected_output)
-set_buf_lines(M.state.handles.output_buf, test.actual_output)
-if M.state.handles.output_buf and api.nvim_buf_is_valid(M.state.handles.output_buf) then
-	api.nvim_buf_set_option(M.state.handles.output_buf, 'modifiable', false)
-end
+local function load_current_test(preserve_output)
+    local test = M.state.tests[M.state.current_test_idx]
+    if not test then return end
+    init_vim_vars()
+
+    local function set_buf_lines(buf_handle, content)
+        if buf_handle and api.nvim_buf_is_valid(buf_handle) then
+            api.nvim_buf_set_option(buf_handle, 'modifiable', true)
+            api.nvim_buf_set_lines(buf_handle, 0, -1, false, vim.split(content or "", '\n', { plain = true }))
+        end
+    end
+
+    set_buf_lines(M.state.handles.input_buf, test.input)
+    set_buf_lines(M.state.handles.expected_buf, test.expected_output)
+
+    -- 只有在不需要保留输出时才设置 actual_output
+    if not preserve_output then
+        set_buf_lines(M.state.handles.output_buf, test.actual_output)
+    end
+
+    if M.state.handles.output_buf and api.nvim_buf_is_valid(M.state.handles.output_buf) then
+        api.nvim_buf_set_option(M.state.handles.output_buf, 'modifiable', false)
+    end
 end
 
 -- 清理旧的缓冲区
@@ -700,7 +707,7 @@ local function run_next_test(idx)
 		if first_failed_test then
 			M.state.current_test_idx = first_failed_test
 			render_test_list()
-			load_current_test()
+			load_current_test(true) -- 传入 true 参数，保留实际输出
 			focus_input(false)
 			notify("All tests completed. Focused on first failed test: " .. first_failed_test)
 		else
@@ -711,7 +718,7 @@ local function run_next_test(idx)
 
 	M.state.current_test_idx = idx
 	render_test_list()
-	load_current_test()
+	load_current_test() -- 正常加载，清空输出
 	M.run_current_test()
 	init_vim_vars()
 	local timer = uv.new_timer()
@@ -789,8 +796,8 @@ api.nvim_create_user_command('CphPrev', M.prev_test, { desc = 'Go to previous te
 api.nvim_create_user_command('CphSave', M.save_and_stay, { desc = 'Save test cases' })
 local opts = { noremap = true, silent = true }
 vim.keymap.set('n', '<leader>o', M.toggle, vim.tbl_extend('force', opts, { desc = '打开cph' }))
-vim.keymap.set('n', '<leader>r', M.run_current_test, opts, vim.tbl_extend('force', opts,{ desc = '运行当前测试点' }))
-vim.keymap.set('n', '<leader>ra', M.run_all_tests, opts, vim.tbl_extend('force', opts,{ desc = '运行所有测试点' }))
+vim.keymap.set('n', '<leader>r', M.run_current_test, vim.tbl_extend('force', opts, { desc = '运行当前测试点' }))
+vim.keymap.set('n', '<leader>ra', M.run_all_tests, vim.tbl_extend('force', opts, { desc = '运行所有测试点' }))
 vim.keymap.set('n', '<leader>a', M.add_test, vim.tbl_extend('force', opts, { desc = '添加测试点' }))
 vim.keymap.set('n', '<leader>d', M.delete_test, vim.tbl_extend('force', opts, { desc = '删除当前测试点' }))
 vim.keymap.set('n', '<leader>x', M.kill_process, vim.tbl_extend('force', opts, { desc = '终止当前测试点' }))
