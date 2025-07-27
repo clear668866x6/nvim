@@ -69,6 +69,18 @@ for i = 1, 9 do
     { silent = true }
   )
 end
+
+
+-- 运行 / 用例 / 下载（全部以 <leader>c 开头）
+vim.keymap.set('n', '<leader>r',  '<cmd>CompetiTest run<cr>',              opts) -- 编译+运行全部测试
+vim.keymap.set('n', '<leader>c',  '<cmd>CompetiTest run_no_compile<cr>',   opts) -- 仅运行
+vim.keymap.set('n', '<leader>a',  '<cmd>CompetiTest add_testcase<cr>',     opts) -- 添加用例
+vim.keymap.set('n', '<leader>ea',  '<cmd>CompetiTest edit_testcase<cr>',    opts) -- 编辑用例
+vim.keymap.set('n', '<leader>da',  '<cmd>CompetiTest delete_testcase<cr>',  opts) -- 删除用例
+vim.keymap.set('n', '<leader>cp',  '<cmd>CompetiTest receive problem<cr>',  opts) -- 下载单题
+vim.keymap.set('n', '<leader>co',  '<cmd>CompetiTest receive contest<cr>',  opts) -- 下载整场比赛
+vim.keymap.set('n', '<leader>o',  '<cmd>CompetiTest show_ui<cr>',          opts) -- 再次打开结果窗口
+
 -- 将 <leader> 键设置为空格键 (此部分不是 keymap, 保持原样)
 vim.g.mapleader = "\\"
 vim.g.maplocalleader = "\\"

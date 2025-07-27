@@ -450,6 +450,13 @@ end,
 			show_warnings = true,
 		}
 	},
+	{
+		{'akinsho/toggleterm.nvim', version = "*", config = true}
+	},
+	{
+		'xeluxee/competitest.nvim',
+		dependencies = 'MunifTanjim/nui.nvim',
+	},
 })
 
 vim.notify("🚀 插件配置加载完成！", vim.log.levels.INFO, { title = "Neovim" })
