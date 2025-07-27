@@ -1,160 +1,128 @@
-local is_picking_focus = require("cokeline/mappings").is_picking_focus
-local is_picking_close = require("cokeline/mappings").is_picking_close
+local cokeline = require('cokeline')
+local get_hl_attr = require('cokeline.hlgroups').get_hl_attr
 
-local red = vim.g.terminal_color_1
-local yellow = vim.g.terminal_color_4
-local space = { text = " " }
-local high = "#63f2f1"
-local light = '#f3f3f3'
-local text = "#f3f3f3"
-local grey = "#2d2b40"
-local dark = "#1d1b2f"
-
-local function get_path_parts(path)
-  local dirs = {}
-  for dir in string.gmatch(path, "([^/]+)") do
-    table.insert(dirs, dir)
-  end
-
-  local filename = dirs[#dirs]
-  if filename ~= nil and string.sub(filename, 1, 1) == "+" then
-    local ext = filename:match("^.+(%..+)$")
-    local last_dir = dirs[#dirs - 1]
-    if last_dir == '[id]' and path:match('api') and filename == "+server.ts" then
-      local id_index = 0
-      for i, dir in ipairs(dirs) do
-        if dir == "[id]" then
-          id_index = i
-        end
-      end
-      local new_dir = dirs[id_index - 1]
-      return new_dir .. "/[id]/" .. filename
-    elseif last_dir == '[id]' then
-      local id_index = 0
-      for i, dir in ipairs(dirs) do
-        if dir == "[id]" then
-          id_index = i
-        end
-      end
-      local new_dir = dirs[id_index - 1]
-      return new_dir .. "/[id]/" .. filename
-    elseif
-        path:match("api") then
-      local api_index = 0
-      for i, dir in ipairs(dirs) do
-        if dir == "api" then
-          api_index = i
-        end
-      end
-      local api_next_dir = dirs[api_index + 1]
-      return "api/" .. api_next_dir .. '/' .. filename
-    elseif ext == nil then
-      local dir = dirs[#dirs - 1]
-      return dir .. "/" .. filename
-    else
-      local dir = dirs[#dirs - 1]
-      return dir .. "/" .. filename
-    end
-  end
+local function get_color(group, attr, fallback)
+local color = get_hl_attr(group, attr)
+return color or (fallback and get_hl_attr(fallback, attr))
 end
 
-require("cokeline").setup(
-  {
-    sidebar = {
-      filetype = 'NvimTree',
-      components = {
-        {
-          text = "  NvimTree",
-          fg = dark,
-          bg = high,
-          style = 'bold'
-        } }
-    },
-    default_hl = {
-      fg = function(buffer)
-        if buffer.is_focused then
-          return dark
-        end
-        return text
-      end,
-      bg = function(buffer)
-        if buffer.is_focused then
-          return high
-        end
-        return grey
-      end
-    },
-    components = {
-      {
-        text = function(buffer)
-          if buffer.index ~= 1 then
-            return ""
-          end
-          return ""
-        end,
-        bg = function(buffer)
-          if buffer.is_focused then
-            return high
-          end
-          return grey
-        end,
-        fg = dark
-      },
-      space,
-      {
-        text = function(buffer)
-          if is_picking_focus() or is_picking_close() then
-            return buffer.pick_letter .. " "
-          end
+-- 基础颜色
+local editor_bg = function() return get_color('Normal', 'bg') end
+local sidebar_bg = function() return get_color('NvimTreeNormal', 'bg', 'Normal') end
 
-          return buffer.devicon.icon
-        end,
-        fg = function(buffer)
-          if is_picking_focus() then
-            return yellow
-          end
-          if is_picking_close() then
-            return red
-          end
+-- 标签颜色
+local focused_fg = function() return get_color('Normal', 'fg') end
+local focused_bg = function() return get_color('Visual', 'bg') end
+local unfocused_fg = function() return get_color('Comment', 'fg') end
+local unfocused_bg = function() return get_color('TabLineFill', 'bg', 'Normal') end
 
-          if buffer.is_focused then
-            return dark
-          else
-            return light
-          end
-        end,
-        style = function(_)
-          return (is_picking_focus() or is_picking_close()) and "italic,bold" or nil
-        end
-      },
-      {
-        text = function(buffer)
-          if get_path_parts(buffer.path) ~= nil then
-            return get_path_parts(buffer.path) .. "⠀"
-          else
-           return buffer.unique_prefix .. buffer.filename .. "⠀"
-          end
-        end,
-        style = function(buffer)
-          return buffer.is_focused and "bold" or nil
-        end
-      },
-      {
-        text = "",
-        fg = function(buffer)
-          if buffer.is_focused then
-            return high
-          end
-          return grey
-        end,
-        bg = function()
-          local success, normal_hl = pcall(vim.api.nvim_get_hl_by_name, 'Normal', true)
-          if success and normal_hl and normal_hl.background then
-            return string.format("#%06x", normal_hl.background)
-          end
-          return light
-        end
-      }
-    }
+local pick_fg = '#ffffff'
+local pick_bg = '#e32636'
+
+cokeline.setup({
+sidebar = {
+  filetype = { 'NvimTree', 'neo-tree' },
+  components = {
+    {
+      text = '',
+      fg = unfocused_fg,
+      bg = sidebar_bg,
+    },
+    {
+      text = function(buf) return ' ' .. buf.filetype .. ' ' end,
+               fg = unfocused_fg,
+               bg = sidebar_bg,
+               bold = true,
+    },
   }
-)
+},
+
+-- 核心组件配置
+components = {
+  -- 左侧圆角
+  {
+    text = '',
+    fg = function(buffer)
+    return buffer.is_focused and focused_bg() or unfocused_bg()
+    end,
+    bg = editor_bg,
+  },
+
+  -- 图标
+  {
+    text = function(buffer)
+    return ' ' .. buffer.devicon.icon .. ' '
+end,
+fg = function(buffer)
+return buffer.devicon.color
+end,
+bg = function(buffer)
+return buffer.is_focused and focused_bg() or unfocused_bg()
+end,
+  },
+
+  {
+    text = function(buffer)
+    return buffer.unique_prefix .. buffer.filename
+    end,
+    fg = focused_fg,
+    bg = function(buffer)
+    return buffer.is_focused and focused_bg() or unfocused_bg()
+    end,
+    bold = function(buffer)
+    return buffer.is_focused
+    end,
+    on_drag = cokeline.move_buffer,
+  },
+
+  {
+    text = function(buffer)
+    if buffer.is_modified then
+      return ' ●'
+end
+return ''
+end,
+fg = focused_fg,
+bg = function(buffer)
+return buffer.is_focused and focused_bg() or unfocused_bg()
+end,
+  },
+
+  {
+    text = ' ',
+    bg = function(buffer)
+    return buffer.is_focused and focused_bg() or unfocused_bg()
+    end,
+  },
+
+  {
+    text = '', -- 关闭图标
+    on_click = function(_, _, _, _, buffer)
+    buffer:delete()
+    end,
+    fg = focused_fg,
+    bg = function(buffer)
+    return buffer.is_focused and focused_bg() or unfocused_bg()
+    end,
+    pick = {
+      fg = pick_fg,
+      bg = pick_bg,
+      bold = true,
+    },
+  },
+
+  -- 右侧圆角
+  {
+    text = '',
+    fg = function(buffer)
+    return buffer.is_focused and focused_bg() or unfocused_bg()
+    end,
+    bg = editor_bg,
+  },
+
+  {
+    text = ' ',
+    bg = editor_bg,
+  },
+},
+})

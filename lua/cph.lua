@@ -354,7 +354,8 @@ api.nvim_buf_set_lines(buf, 0, -1, false, lines)
 api.nvim_buf_set_option(buf, 'modifiable', false)
 end
 
-local function load_current_test(preserve_output)
+-- [[ 核心修正 #1: 修改此函数 ]]
+local function load_current_test()
     local test = M.state.tests[M.state.current_test_idx]
     if not test then return end
     init_vim_vars()
@@ -368,12 +369,10 @@ local function load_current_test(preserve_output)
 
     set_buf_lines(M.state.handles.input_buf, test.input)
     set_buf_lines(M.state.handles.expected_buf, test.expected_output)
+    -- 始终加载实际输出，而不是有条件地跳过
+    set_buf_lines(M.state.handles.output_buf, test.actual_output)
 
-    -- 只有在不需要保留输出时才设置 actual_output
-    if not preserve_output then
-        set_buf_lines(M.state.handles.output_buf, test.actual_output)
-    end
-
+    -- 确保在更新后，输出缓冲区仍然是不可修改的
     if M.state.handles.output_buf and api.nvim_buf_is_valid(M.state.handles.output_buf) then
         api.nvim_buf_set_option(M.state.handles.output_buf, 'modifiable', false)
     end
@@ -697,6 +696,7 @@ else
 end
 end
 
+-- [[ 核心修正 #2: 修改此函数 ]]
 function M.run_all_tests()
 if not M.state.is_open then notify("Panel is not open", vim.log.levels.WARN); return end
 local first_failed_test = nil
@@ -707,7 +707,8 @@ local function run_next_test(idx)
 		if first_failed_test then
 			M.state.current_test_idx = first_failed_test
 			render_test_list()
-			load_current_test(true) -- 传入 true 参数，保留实际输出
+			-- 调用已修改的函数，不再需要参数
+			load_current_test()
 			focus_input(false)
 			notify("All tests completed. Focused on first failed test: " .. first_failed_test)
 		else

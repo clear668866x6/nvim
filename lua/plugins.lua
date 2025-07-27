@@ -419,12 +419,36 @@ end,
 	},
 	{
 		'rachartier/tiny-inline-diagnostic.nvim',
-		event = 'LspAttach', -- 仅在LSP启动时加载
+		event = 'LspAttach',
 		config = function()
 		require('tiny-inline-diagnostic').setup({
 			show_diagnostic_text = true,
 		})
 		end
+	},
+	{ 'kosayoda/nvim-lightbulb' ,
+		config=function()
+		require("nvim-lightbulb").setup({
+			autocmd = { enabled = true }
+		})
+		end
+	},
+	{
+		'mawkler/modicator.nvim',
+		dependencies = 'mawkler/onedark.nvim', -- Add your colorscheme plugin here
+		init = function()
+		-- These are required for Modicator to work
+		vim.o.cursorline = true
+		vim.o.number = true
+		vim.o.termguicolors = true
+		end,
+		opts = {
+			-- Warn if any required option above is missing. May emit false positives
+			-- if some other plugin modifies them, which in that case you can just
+			-- ignore. Feel free to remove this line after you've gotten Modicator to
+			-- work properly.
+			show_warnings = true,
+		}
 	},
 })
 

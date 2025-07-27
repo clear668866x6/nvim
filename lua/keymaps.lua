@@ -20,6 +20,8 @@ keymap.set('n', '<F5>', ':tabnew<CR>', vim.tbl_extend('force', opts, { desc = '�
 keymap.set('v', '<C-c>', '"+y', vim.tbl_extend('force', opts, { desc = '复制选中内容到系统剪贴板' }))
 keymap.set('n', '<C-v>', '"*p', vim.tbl_extend('force', opts, { desc = '从系统剪贴板粘贴' }))
 keymap.set({'n', 'v'}, '<C-a>', 'ggVG', { desc = '全选文件内容' })
+keymap.set('n', '<C-z>', 'u', vim.tbl_extend('force', opts, { desc = '撤回' }))
+keymap.set('i', '<C-z>', '<C-o>u', vim.tbl_extend('force', opts, { desc = '撤回' }))
 
 -- Leader 快捷键 (Telescope)
 keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<CR>', vim.tbl_extend('force', opts, { desc = '使用 Telescope 查找文件' }))
@@ -39,12 +41,38 @@ keymap.set('i', '<C-[>', '<Esc>', vim.tbl_extend('force', opts, { desc = '在插
 keymap.set('v', '<C-[>', '<Esc>', vim.tbl_extend('force', opts, { desc = '在可视模式下使用 C-[ 替代 Esc' }))
 keymap.set('n', '<C-[>', '<Esc>', vim.tbl_extend('force', opts, { desc = '在普通模式下使用 C-[ 替代 Esc' }))
 
+local map = vim.api.nvim_set_keymap
+
+map('n', '<c-2>', '<Plug>(cokeline-switch-prev)', vim.tbl_extend('force', opts, {
+    desc = '将标签页向右移动'
+}))
+
+-- 将当前标签页 (buffer) 向左移动
+map('n', '<c-1>', '<Plug>(cokeline-switch-next)', vim.tbl_extend('force', opts, {
+    desc = '将标签页向左移动'
+}))
+
+map("n", "<S-Tab>", "<Plug>(cokeline-focus-prev)", { silent = true })
+map("n", "<Tab>", "<Plug>(cokeline-focus-next)", { silent = true })
+
+for i = 1, 9 do
+  map(
+    "n",
+    ("<F%s>"):format(i),
+    ("<Plug>(cokeline-focus-%s)"):format(i),
+    { silent = true }
+  )
+  map(
+    "n",
+    ("<Leader>%s"):format(i),
+    ("<Plug>(cokeline-switch-%s)"):format(i),
+    { silent = true }
+  )
+end
 -- 将 <leader> 键设置为空格键 (此部分不是 keymap, 保持原样)
 vim.g.mapleader = "\\"
-vim.g.maplocalleader = "\\" -- 为局部 leader 键设置相同值（可选）
+vim.g.maplocalleader = "\\"
 
--- 退出插入模式时自动格式化并保存
--- 注意：这个函数映射的 opts 中已经包含了 noremap，但使用 tbl_extend 可以确保 silent 也被应用，使风格统一
 keymap.set('i', '<Esc>',
            function()
            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'n', true)
