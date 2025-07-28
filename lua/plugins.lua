@@ -405,11 +405,6 @@ end,
 			    close_on_exit = true, -- close the terminal window when the process exits
 			    auto_scroll = true,   -- automatically scroll to the bottom on terminal output
 		    }
-		    vim.keymap.set('n', '<leader>t', ':ToggleTerm<CR>', {
-			    noremap = true,
-			    silent = true,
-			    desc = "打开/关闭终端"
-		    })
 	    end,
     },
 

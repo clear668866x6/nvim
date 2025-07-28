@@ -41,6 +41,13 @@ keymap.set('i', '<C-[>', '<Esc>', vim.tbl_extend('force', opts, { desc = '在插
 keymap.set('v', '<C-[>', '<Esc>', vim.tbl_extend('force', opts, { desc = '在可视模式下使用 C-[ 替代 Esc' }))
 keymap.set('n', '<C-[>', '<Esc>', vim.tbl_extend('force', opts, { desc = '在普通模式下使用 C-[ 替代 Esc' }))
 
+vim.keymap.set('n', '<leader>t', ':ToggleTerm<CR>', {
+  noremap = true,
+  silent = true,
+  desc = "打开/关闭终端"
+})
+vim.keymap.set('t', '<C-.>', [[<C-\><C-n>]], { silent = true ,desc="终端模式切换到normal模式"})
+
 local map = vim.api.nvim_set_keymap
 
 map('n', '<c-2>', '<Plug>(cokeline-switch-prev)', vim.tbl_extend('force', opts, {
