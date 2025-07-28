@@ -81,6 +81,8 @@ vim.keymap.set('n', '<leader>cp',  '<cmd>CompetiTest receive problem<cr>',  opts
 vim.keymap.set('n', '<leader>co',  '<cmd>CompetiTest receive contest<cr>',  opts) -- 下载整场比赛
 vim.keymap.set('n', '<leader>o',  '<cmd>CompetiTest show_ui<cr>',          opts) -- 再次打开结果窗口
 
+vim.keymap.set("n", "<leader>rn", ":IncRename ")
+
 -- 将 <leader> 键设置为空格键 (此部分不是 keymap, 保持原样)
 vim.g.mapleader = "\\"
 vim.g.maplocalleader = "\\"
