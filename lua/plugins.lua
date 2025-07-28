@@ -518,7 +518,6 @@ end,
 		end
 	},
     { "lewis6991/gitsigns.nvim", config = true },
-    { "folke/todo-comments.nvim", dependencies = "nvim-lua/plenary.nvim", config = true },
     { "michaelrommel/nvim-silicon", cmd = "Silicon", config = true },
     -- 截图
     {

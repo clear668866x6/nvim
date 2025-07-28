@@ -90,9 +90,30 @@ vim.keymap.set('n', '<leader>o',  '<cmd>CompetiTest show_ui<cr>',          opts)
 
 vim.keymap.set("n", "<leader>rn", ":IncRename ")
 
--- 将 <leader> 键设置为空格键 (此部分不是 keymap, 保持原样)
-vim.g.mapleader = "\\"
-vim.g.maplocalleader = "\\"
+-- 新增键位更符合vscode
+
+-- 上下移动行 / 选区
+local function move_line_or_selection(dir)
+  local is_visual = vim.fn.mode():match('[vV]')
+  if is_visual then
+    -- 在可视模式：移动选中块
+    local cmd = "'<,'>move " .. (dir == 'up' and "'<-2" or "'>+1")
+    vim.cmd('normal! gv')   -- 重新高亮原选区
+    vim.cmd(cmd)
+    vim.cmd('normal! gv')   -- 移动后再次高亮
+  else
+    -- 普通模式：移动当前行
+    local cmd = dir == 'up' and "move -2" or "move +1"
+    vim.cmd(cmd)
+  end
+end
+
+-- Alt-Up / Alt-Down 上下移动
+vim.keymap.set({'n', 'v'}, '<M-Up>',   function() move_line_or_selection('up')   end,
+               { noremap = true, silent = true })
+vim.keymap.set({'n', 'v'}, '<M-Down>', function() move_line_or_selection('down') end,
+               { noremap = true, silent = true })
+
 
 keymap.set('i', '<Esc>',
            function()
