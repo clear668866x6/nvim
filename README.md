@@ -18,6 +18,10 @@
 
 ## ⚠️ 安装前必读 – 系统依赖
 
+- 字体：Nerd Font。
+
+- 软件：
+
 | 软件         | 最低版本  | 作用             | 一键检测脚本             |
 | ---------- | ----- | -------------- | ------------------ |
 | **Neovim** | 0.9+  | 主程序            | `nvim --version`   |
@@ -50,6 +54,12 @@ sudo apt install neovim git clangd fd-find
 
 ```bash
 sudo pacman -S neovim git clang fd
+```
+
+### Fedora/Red Hart
+
+```bash
+sudo dnf install neovim git clang fd
 ```
 
 ### Windows (Scoop)

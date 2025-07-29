@@ -18,7 +18,7 @@ keymap.set('n', '<leader>tf', ':NvimTreeFindFile<CR>', vim.tbl_extend('force', o
 -- 标签页与剪贴板
 keymap.set('n', '<F5>', ':tabnew<CR>', vim.tbl_extend('force', opts, { desc = '新建标签页' }))
 keymap.set('v', '<C-c>', '"+y', vim.tbl_extend('force', opts, { desc = '复制选中内容到系统剪贴板' }))
-keymap.set('n', '<C-v>', '"*p', vim.tbl_extend('force', opts, { desc = '从系统剪贴板粘贴' }))
+keymap.set('n', '<C-v>', '"+p', vim.tbl_extend('force', opts, { desc = '从系统剪贴板粘贴' }))
 keymap.set({'n', 'v'}, '<C-a>', 'ggVG', { desc = '全选文件内容' })
 keymap.set('n', '<C-z>', 'u', vim.tbl_extend('force', opts, { desc = '撤回' }))
 keymap.set('i', '<C-z>', '<C-o>u', vim.tbl_extend('force', opts, { desc = '撤回' }))
