@@ -77,7 +77,6 @@ for i = 1, 9 do
   )
 end
 
-
 -- 运行 / 用例 / 下载（全部以 <leader>c 开头）
 vim.keymap.set('n', '<leader>r',  '<cmd>CompetiTest run<cr>',              opts) -- 编译+运行全部测试
 vim.keymap.set('n', '<leader>c',  '<cmd>CompetiTest run_no_compile<cr>',   opts) -- 仅运行
@@ -94,7 +93,7 @@ vim.keymap.set("n", "<leader>rn", ":IncRename ")
 
 -- 上下移动行 / 选区
 local function move_line_or_selection(dir)
-  local is_visual = vim.fn.mode():match('[vV]')
+  local is_visual = vim.fn.mode():match('[vV]')
   if is_visual then
     -- 在可视模式：移动选中块
     local cmd = "'<,'>move " .. (dir == 'up' and "'<-2" or "'>+1")
@@ -114,26 +113,55 @@ vim.keymap.set({'n', 'v'}, '<M-Up>',   function() move_line_or_selection('up')  
 vim.keymap.set({'n', 'v'}, '<M-Down>', function() move_line_or_selection('down') end,
                { noremap = true, silent = true })
 
+-- 智能左右方向键：跨行跳转
+local function smart_left()
+  local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+  if col == 0 and row > 1 then
+    -- 当前在行首且不是第一行，跳到上一行末尾
+    local prev_line_length = vim.fn.col({row - 1, '$'}) - 1
+    local target_col = math.max(0, prev_line_length - 1)  -- normal模式下行末是倒数第二个位置
+    vim.api.nvim_win_set_cursor(0, {row - 1, target_col})
+  else
+    -- 正常左移
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Left>', true, false, true), 'n', true)
+  end
+end
 
-keymap.set('i', '<Esc>',
-           function()
-           vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'n', true)
-           -- 建议使用 pcall 来安全地调用命令，防止某个命令不存在时报错
-           pcall(vim.cmd, 'FormatWrite')
-           pcall(vim.cmd, 'write')
-           end,
-           vim.tbl_extend('force', opts, { desc = '离开插入模式时，先格式化再保存' })
-)
-keymap.set('n', '<Esc>',
-           function()
-           vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'n', true)
-           -- 建议使用 pcall 来安全地调用命令，防止某个命令不存在时报错
-           pcall(vim.cmd, 'FormatWrite')
-           pcall(vim.cmd, 'write')
-           end,
-           vim.tbl_extend('force', opts, { desc = '离开插入模式时，先格式化再保存' })
-)
-keymap.set('v', '<Esc>',
+local function smart_right()
+  local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+  local line_length = vim.fn.col({row, '$'}) - 1  -- 获取行的实际长度
+  local total_lines = vim.api.nvim_buf_line_count(0)
+  local mode = vim.fn.mode()
+
+  local at_line_end = false
+  if mode == 'i' then
+    -- 插入模式：可以在真正的行末（换行符位置）
+    at_line_end = (col >= line_length)
+  else
+    -- normal/visual模式：行末是最后一个字符的位置
+    at_line_end = (col >= line_length - 1 and line_length > 0)
+  end
+
+  if at_line_end and row < total_lines then
+    -- 当前在行末且不是最后一行，跳到下一行开头
+    vim.api.nvim_win_set_cursor(0, {row + 1, 0})
+  else
+    -- 正常右移
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Right>', true, false, true), 'n', true)
+  end
+end
+
+-- 智能左右方向键映射（适用于所有模式）
+vim.keymap.set({'n', 'i', 'v'}, '<Left>', smart_left,
+               vim.tbl_extend('force', opts, { desc = '智能左移：行首时跳到上一行末尾' }))
+vim.keymap.set({'n', 'i', 'v'}, '<Right>', smart_right,
+               vim.tbl_extend('force', opts, { desc = '智能右移：行末时跳到下一行开头' }))
+
+-- Shift+Enter 映射为普通Enter
+vim.keymap.set({'n', 'i', 'v'}, '<S-CR>', '<CR>',
+               vim.tbl_extend('force', opts, { desc = 'Shift+Enter 等同于 Enter' }))
+
+keymap.set({'n', 'i', 'v'}, '<Esc>',
            function()
            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'n', true)
            -- 建议使用 pcall 来安全地调用命令，防止某个命令不存在时报错

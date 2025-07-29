@@ -28,6 +28,9 @@
 | **Git**    | 2.30+ | 拉取插件 / 更新      | `git --version`    |
 | **Clang**  | 15+   | C++ LSP / 调试   | `clangd --version` |
 | **fd**     | 8.0+  | Telescope 文件搜索 | `fd --version`     |
+| **npm**     | 8.0+  | 安装部分LSP及插件依赖 (如 markdown-preview) | `npm --version`     |
+
+- 编译（可选）：安装开发工具包（Development Tools"）
 
 > 如果缺少任何一项，请先按下方「快速安装依赖」操作，再继续！
 
@@ -38,14 +41,14 @@
 ### macOS
 
 ```bash
-brew install neovim git llvm fd
+brew install neovim git llvm fd npm
 ```
 
 ### Ubuntu / Debian
 
 ```bash
 sudo apt update
-sudo apt install neovim git clangd fd-find
+sudo apt install neovim git clangd fd-find npm
 # Ubuntu 仓库的 clangd 可能版本较低，可以用：
 # sudo snap install clangd --classic
 ```
@@ -53,19 +56,19 @@ sudo apt install neovim git clangd fd-find
 ### Arch / Manjaro
 
 ```bash
-sudo pacman -S neovim git clang fd
+sudo pacman -S neovim git clang fd npm
 ```
 
 ### Fedora/Red Hart
 
 ```bash
-sudo dnf install neovim git clang fd
+sudo dnf install neovim git clang fd npm
 ```
 
 ### Windows (Scoop)
 
 ```powershell
-scoop install neovim git llvm fd
+scoop install neovim git llvm fd npm
 ```
 
 ## 🚦 一键安装

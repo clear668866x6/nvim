@@ -20,7 +20,6 @@ require("lazy").setup({
 	-- 颜色主题
 	{
 		"rose-pine/neovim",
-		priority=1000,
 		config=function()
 			vim.cmd.colorscheme "rose-pine-dawn"
 		end,
@@ -157,12 +156,6 @@ require("lazy").setup({
 -- 提供 GUI 安装LSP的插件
 {
 	"williamboman/mason.nvim",
-	build = function()
-		vim.cmd("MasonUpdate")
-	end,
-	config = function()
-		require("mason").setup()
-	end,
 
 },
 { "williamboman/mason-lspconfig.nvim" },
@@ -433,7 +426,6 @@ end,
 	    },
     },
 
-    { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate"},
     { "folke/noice.nvim",
 		event = "VeryLazy", -- 延迟加载 noice
 		dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" }, config = true },
@@ -685,7 +677,7 @@ end,
     {
 	    'mawkler/modicator.nvim',
 		event = "VeryLazy",
-	    dependencies = 'mawkler/onedark.nvim', -- Add your colorscheme plugin here
+	    dependencies = 'rose-pine/neovim', -- Add your colorscheme plugin here
 	    init = function()
 		    -- These are required for Modicator to work
 		    vim.o.cursorline = true
@@ -907,15 +899,16 @@ end,
     },
 
     -- Markdown 预览和编辑增强
+    -- 在您的 lazy.nvim 插件配置中找到 markdown-preview.nvim
     {
-	    "iamcco/markdown-preview.nvim",
-	    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-	    ft = { "markdown" },
-	    build = function() vim.fn["mkdp#util#install"]() end,
-	    config = function()
-		    vim.keymap.set("n", "<leader>mp", "<cmd>MarkdownPreviewToggle<CR>", { desc = "切换 Markdown 预览" })
-	    end,
-    },
+		"iamcco/markdown-preview.nvim",
+		-- 添加下面的 build 命令
+		build = "cd app && npm install",
+		init = function()
+		vim.g.mkdp_filetypes = { "markdown" }
+		end,
+		ft = { "markdown" },
+	},
 
     -- 高级搜索和替换
     {
@@ -970,5 +963,35 @@ end,
     },
 
 	{ 'echasnovski/mini.animate', version = '*' },
+
+	-- 函数签名帮助
+	{
+		"ray-x/lsp_signature.nvim",
+		event = "VeryLazy",
+		opts = {},
+		config = function(_, opts)
+		require('lsp_signature').setup(opts)
+		end
+	},
+
+	-- 增强的语法高亮和代码折叠
+	{
+		"nvim-treesitter/nvim-treesitter-context",
+		dependencies = { "nvim-treesitter/nvim-treesitter" },
+		config = function()
+		require('treesitter-context').setup({
+			enable = true,
+			max_lines = 0,
+			min_window_height = 0,
+			line_numbers = true,
+			multiline_threshold = 20,
+			trim_scope = 'outer',
+			mode = 'cursor',
+			separator = nil,
+			zindex = 20,
+			on_attach = nil,
+		})
+		end,
+	},
 
 })

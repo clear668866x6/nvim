@@ -20,6 +20,7 @@ vim.api.nvim_create_autocmd('InsertLeave', {
     end,
     desc = '在离开插入模式时自动保存已修改的文件'
 })
+
 local smart_quit_group = vim.api.nvim_create_augroup('SmartQuit', { clear = true })
 
 -- 新增一个标志位，用于防止递归
