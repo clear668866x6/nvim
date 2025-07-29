@@ -44,3 +44,9 @@ vim.cmd([[let &t_Ce = "\e[4:0m"]])
 
 -- 启用 'splitright' 选项，以便在右侧分割窗口
 vim.opt.splitright = true
+
+-- 行为(不看大小写)
+vim.o.ignorecase = true
+vim.o.smartcase = true
+vim.o.wildignorecase = true
+

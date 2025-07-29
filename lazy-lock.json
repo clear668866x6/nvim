@@ -74,7 +74,6 @@
   "rayso.nvim": { "branch": "main", "commit": "4a94c6fa2410e3800cf47a03b8f5e5315595ba99" },
   "resession.nvim": { "branch": "master", "commit": "84c81e5fd8a94dc85a60b97089536174e558e288" },
   "rustaceanvim": { "branch": "master", "commit": "e9c5aaba16fead831379d5f44617547a90b913c7" },
-  "sakurajima.nvim": { "branch": "main", "commit": "467e787c6f9c5a48ef94a48c5b925632130bef28" },
   "smartcolumn.nvim": { "branch": "main", "commit": "b9cdbdf42f7ac5a659204cd5926017c7ff724a19" },
   "smear-cursor.nvim": { "branch": "main", "commit": "1a3df9af4ed017fafecd93c6837956914f269472" },
   "snacks.nvim": { "branch": "main", "commit": "bc0630e43be5699bb94dadc302c0d21615421d93" },

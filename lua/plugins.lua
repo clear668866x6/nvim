@@ -20,6 +20,7 @@ require("lazy").setup({
 	-- 颜色主题
 	{
 		"rose-pine/neovim",
+		priority=1000,
 		config=function()
 			vim.cmd.colorscheme "rose-pine-dawn"
 		end,
@@ -433,7 +434,9 @@ end,
     },
 
     { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate"},
-    { "folke/noice.nvim", dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" }, config = true },
+    { "folke/noice.nvim",
+		event = "VeryLazy", -- 延迟加载 noice
+		dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" }, config = true },
     {
 	    "sphamba/smear-cursor.nvim",
 	    opts = {
@@ -681,6 +684,7 @@ end,
     },
     {
 	    'mawkler/modicator.nvim',
+		event = "VeryLazy",
 	    dependencies = 'mawkler/onedark.nvim', -- Add your colorscheme plugin here
 	    init = function()
 		    -- These are required for Modicator to work
@@ -743,6 +747,7 @@ end,
     -- 测试运行器
     {
 	    "nvim-neotest/neotest",
+		event = "VeryLazy",
 	    dependencies = {
 		    "nvim-lua/plenary.nvim",
 		    "antoinemadec/FixCursorHold.nvim",
@@ -965,13 +970,5 @@ end,
     },
 
 	{ 'echasnovski/mini.animate', version = '*' },
-	{
-		"Daiki48/sakurajima.nvim",
-		lazy = false,
-		branch = "main",
-		config = function()
-		vim.cmd([[colorscheme sakurajima]])
-		end,
-	},
 
 })

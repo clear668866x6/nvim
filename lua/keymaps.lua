@@ -124,3 +124,21 @@ keymap.set('i', '<Esc>',
            end,
            vim.tbl_extend('force', opts, { desc = '离开插入模式时，先格式化再保存' })
 )
+keymap.set('n', '<Esc>',
+           function()
+           vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'n', true)
+           -- 建议使用 pcall 来安全地调用命令，防止某个命令不存在时报错
+           pcall(vim.cmd, 'FormatWrite')
+           pcall(vim.cmd, 'write')
+           end,
+           vim.tbl_extend('force', opts, { desc = '离开插入模式时，先格式化再保存' })
+)
+keymap.set('v', '<Esc>',
+           function()
+           vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'n', true)
+           -- 建议使用 pcall 来安全地调用命令，防止某个命令不存在时报错
+           pcall(vim.cmd, 'FormatWrite')
+           pcall(vim.cmd, 'write')
+           end,
+           vim.tbl_extend('force', opts, { desc = '离开插入模式时，先格式化再保存' })
+)

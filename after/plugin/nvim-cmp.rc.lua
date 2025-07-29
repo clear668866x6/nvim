@@ -75,8 +75,16 @@ cmp.setup.cmdline({ '/', '?' }, {
 		['<C-k>'] = cmp.mapping.select_prev_item(),
 		['<C-j>'] = cmp.mapping.select_next_item(),
 		['<CR>'] = cmp.mapping.confirm({ select = true }),
-		['<Tab>'] = cmp.mapping.complete(),
-		['<S-Tab>'] = cmp.mapping.complete(),
+		['<Tab>'] = cmp.mapping(function(fallback)
+        -- 如果补全菜单可见，就确认选择
+        if cmp.visible() then
+            cmp.confirm({ select = true })
+        -- 如果菜单不可见，就调用 fallback 函数
+        -- 在命令行模式下，fallback 会触发默认的补全行为，也就是 `cmp.complete()`
+        else
+            fallback()
+        end
+    end, { "c" }), -- "c" 代表 command-line mode
 	}),
 	sources = cmp.config.sources({
 		-- 搜索历史记录
@@ -93,8 +101,16 @@ cmp.setup.cmdline(':', {
 		['<C-k>'] = cmp.mapping.select_prev_item(),
 		['<C-j>'] = cmp.mapping.select_next_item(),
 		['<CR>'] = cmp.mapping.confirm({ select = true }),
-		['<Tab>'] = cmp.mapping.complete(),
-		['<S-Tab>'] = cmp.mapping.complete(),
+		['<Tab>'] = cmp.mapping(function(fallback)
+        -- 如果补全菜单可见，就确认选择
+        if cmp.visible() then
+            cmp.confirm({ select = true })
+        -- 如果菜单不可见，就调用 fallback 函数
+        -- 在命令行模式下，fallback 会触发默认的补全行为，也就是 `cmp.complete()`
+        else
+            fallback()
+        end
+    end, { "c" }), -- "c" 代表 command-line mode
 	}),
 	sources = cmp.config.sources({
 		-- Neovim 命令
