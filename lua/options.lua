@@ -32,11 +32,6 @@ opt.splitright = true        -- 水平分割窗口时，新窗口在右侧
 opt.splitbelow = true        -- 垂直分割窗口时，新窗口在下方
 opt.scrolloff = 8            -- 光标上下保留 8 行的边距
 
--- 折叠
-opt.foldmethod = 'expr'      -- 使用表达式定义折叠
-opt.foldexpr = 'nvim_treesitter#foldexpr()'
-opt.foldlevel = 99           -- 默认不折叠任何代码
-
 -- 下划线
 -- "\e[4:3m" 是用于下划线文本的 ANSI 转义序列，宽度为1像素
 vim.cmd([[let &t_Cs = "\e[4:3m"]])

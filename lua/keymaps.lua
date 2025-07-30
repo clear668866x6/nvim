@@ -117,13 +117,15 @@ vim.keymap.set({'n', 'v'}, '<M-Down>', function() move_line_or_selection('down')
 local function smart_left()
   local row, col = unpack(vim.api.nvim_win_get_cursor(0))
   if col == 0 and row > 1 then
-    -- 当前在行首且不是第一行，跳到上一行末尾
     local prev_line_length = vim.fn.col({row - 1, '$'}) - 1
-    local target_col = math.max(0, prev_line_length - 1)  -- normal模式下行末是倒数第二个位置
+    local mode = vim.fn.mode()
+    local target_col = (mode == 'i') and prev_line_length
+                                           or math.max(0, prev_line_length - 1)
+
     vim.api.nvim_win_set_cursor(0, {row - 1, target_col})
   else
-    -- 正常左移
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Left>', true, false, true), 'n', true)
+    vim.api.nvim_feedkeys(
+      vim.api.nvim_replace_termcodes('<Left>', true, false, true), 'n', true)
   end
 end
 
@@ -164,7 +166,6 @@ vim.keymap.set({'n', 'i', 'v'}, '<S-CR>', '<CR>',
 keymap.set({'n', 'i', 'v'}, '<Esc>',
            function()
            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'n', true)
-           -- 建议使用 pcall 来安全地调用命令，防止某个命令不存在时报错
            pcall(vim.cmd, 'FormatWrite')
            pcall(vim.cmd, 'write')
            end,

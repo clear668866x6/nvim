@@ -1,5 +1,4 @@
 -- ~/.config/nvim/lua/autocmds.lua
--- 创建一个统一的组来管理我们所有的自动命令
 local augroup = vim.api.nvim_create_augroup('MyAutoCommands', { clear = true })
 
 -- 保存+格式化
@@ -29,14 +28,7 @@ local is_quitting_all = false
 vim.api.nvim_create_autocmd("QuitPre", {
     group = smart_quit_group,
     callback = function()
-        -- 如果 is_quitting_all 标志位为 true，说明我们正在执行 qall!，直接返回以跳出循环
         if is_quitting_all then
-            return
-        end
-
-        -- 检查是否正在切换文件，如果是则跳过 (这部分是您原有的，很好)
-        local cph_ok, cph = pcall(require, 'cph')
-        if cph_ok and cph.state and cph.state.switching_file then
             return
         end
 
