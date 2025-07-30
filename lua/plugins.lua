@@ -53,7 +53,10 @@ require("lazy").setup({
 	},
 
 	-- 代码语法高亮，支持多种语言
-	{ "nvim-treesitter/nvim-treesitter" },
+	{
+		"nvim-treesitter/nvim-treesitter",
+		build = ":TSUpdate"
+	},
 
 	-- 代码块缩进显示插件
 	{
@@ -427,8 +430,8 @@ end,
     },
 
     { "folke/noice.nvim",
-		event = "VeryLazy", -- 延迟加载 noice
-		dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" }, config = true },
+    event = "VeryLazy", -- 延迟加载 noice
+    dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" }, config = true },
     {
 	    "sphamba/smear-cursor.nvim",
 	    opts = {
@@ -443,18 +446,18 @@ end,
 	    "nvim-tree/nvim-web-devicons", opts = {}
     },
     {
-		"CRAG666/code_runner.nvim",
-		config = function()
-			require("code_runner").setup({
-				mode = "toggleterm",
+	    "CRAG666/code_runner.nvim",
+	    config = function()
+		    require("code_runner").setup({
+			    mode = "toggleterm",
 
-				toggleterm = {
-					direction = "float",
-					auto_scroll = true,
-				}
-			})
-		end,
-	},
+			    toggleterm = {
+				    direction = "float",
+				    auto_scroll = true,
+			    }
+		    })
+	    end,
+    },
 
     -- 格式化
     {
@@ -676,7 +679,7 @@ end,
     },
     {
 	    'mawkler/modicator.nvim',
-		event = "VeryLazy",
+	    event = "VeryLazy",
 	    dependencies = 'rose-pine/neovim', -- Add your colorscheme plugin here
 	    init = function()
 		    -- These are required for Modicator to work
@@ -739,7 +742,6 @@ end,
     -- 测试运行器
     {
 	    "nvim-neotest/neotest",
-		event = "VeryLazy",
 	    dependencies = {
 		    "nvim-lua/plenary.nvim",
 		    "antoinemadec/FixCursorHold.nvim",
@@ -761,7 +763,7 @@ end,
 					    args = { "--no-capture" },
 					    dap_adapter = "lldb",
 				    },
-				    require("neotest-gtest").setup({}),
+				    ["neotest-gtest"] = {},
 			    },
 		    })
 
@@ -901,14 +903,14 @@ end,
     -- Markdown 预览和编辑增强
     -- 在您的 lazy.nvim 插件配置中找到 markdown-preview.nvim
     {
-		"iamcco/markdown-preview.nvim",
-		-- 添加下面的 build 命令
-		build = "cd app && npm install",
-		init = function()
-		vim.g.mkdp_filetypes = { "markdown" }
-		end,
-		ft = { "markdown" },
-	},
+	    "iamcco/markdown-preview.nvim",
+	    -- 添加下面的 build 命令
+	    build = "cd app && npm install",
+	    init = function()
+		    vim.g.mkdp_filetypes = { "markdown" }
+	    end,
+	    ft = { "markdown" },
+    },
 
     -- 高级搜索和替换
     {
@@ -962,36 +964,36 @@ end,
 	    end,
     },
 
-	{ 'echasnovski/mini.animate', version = '*' },
+    { 'echasnovski/mini.animate', version = '*' },
 
-	-- 函数签名帮助
-	{
-		"ray-x/lsp_signature.nvim",
-		event = "VeryLazy",
-		opts = {},
-		config = function(_, opts)
-		require('lsp_signature').setup(opts)
-		end
-	},
+    -- 函数签名帮助
+    {
+	    "ray-x/lsp_signature.nvim",
+	    event = "VeryLazy",
+	    opts = {},
+	    config = function(_, opts)
+		    require('lsp_signature').setup(opts)
+	    end
+    },
 
-	-- 增强的语法高亮和代码折叠
-	{
-		"nvim-treesitter/nvim-treesitter-context",
-		dependencies = { "nvim-treesitter/nvim-treesitter" },
-		config = function()
-		require('treesitter-context').setup({
-			enable = true,
-			max_lines = 0,
-			min_window_height = 0,
-			line_numbers = true,
-			multiline_threshold = 20,
-			trim_scope = 'outer',
-			mode = 'cursor',
-			separator = nil,
-			zindex = 20,
-			on_attach = nil,
-		})
-		end,
-	},
+    -- 增强的语法高亮和代码折叠
+    {
+	    "nvim-treesitter/nvim-treesitter-context",
+	    dependencies = { "nvim-treesitter/nvim-treesitter" },
+	    config = function()
+		    require('treesitter-context').setup({
+			    enable = true,
+			    max_lines = 0,
+			    min_window_height = 0,
+			    line_numbers = true,
+			    multiline_threshold = 20,
+			    trim_scope = 'outer',
+			    mode = 'cursor',
+			    separator = nil,
+			    zindex = 20,
+			    on_attach = nil,
+		    })
+	    end,
+    },
 
 })
